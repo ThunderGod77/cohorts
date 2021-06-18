@@ -7,14 +7,28 @@ import (
 )
 
 //to verify if there is an existing student or not
-func GetStudent(email string, username string) (bool, error) {
+
+type studentData struct {
+	ID    string
+	Passw string
+	Auth  string
+}
+
+func GetStudent(email string, username string) (*studentData, bool, error) {
 	var id string
+	var passw string
+	var auth string
 	//query to get students with given email or username
-	err := global.Dbpool.QueryRow(context.Background(), "SELECT id FROM users WHERE username=$1 OR email=$2", username, email).Scan(&id)
+	err := global.Dbpool.QueryRow(context.Background(), "SELECT id,password,auth FROM users WHERE username=$1 OR email=$2", username, email).Scan(&id, &passw, &auth)
 	if err == pgx.ErrNoRows {
-		return false, nil
+		return nil, false, nil
 	} else {
-		return true, err
+		sD := studentData{
+			ID:    id,
+			Passw: passw,
+			Auth:  auth,
+		}
+		return &sD, true, err
 	}
 
 }

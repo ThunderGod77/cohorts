@@ -37,7 +37,7 @@ func AddStudents(c *fiber.Ctx) error {
 	}
 
 	// to check if the user already exists
-	present, err := db.GetStudent(s.Email, s.Username)
+	_, present, err := db.GetStudent(s.Email, s.Username)
 	// in case of error getting data from the database
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())

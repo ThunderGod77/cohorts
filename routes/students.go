@@ -6,11 +6,9 @@ import (
 )
 
 func StudentRoutes(route fiber.Router) {
+	route.Post("/login", students.Login)
+	//to test jwt authentication
+	route.Get("/test", students.AuthRequired(), students.Test)
 	route.Post("/", students.AddStudents)
-	route.Post("/", students.Login)
-
-	route.Get("/test", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"ping": "pong"})
-	})
 
 }
